@@ -1,0 +1,85 @@
+What is Sliding Window?
+
+Instead of recalculating things for every subarray, we slide a window over the array and reuse previous work.
+
+🔹 Type 1: FIXED SIZE Sliding Window
+❓ When to use?
+
+When the question says:
+
+“subarray of size k”
+
+“window size k”
+
+“exactly k elements”
+
+Sliding Window Idea
+
+First calculate sum of first k elements
+
+Then:
+
+add next element
+
+remove first element of window
+
+Find maximum sum of subarray of size k
+int maxSumSubarray(vector<int>& arr, int k) {
+    int sum = 0;
+
+    // first window
+    for (int i = 0; i < k; i++) {
+        sum += arr[i];
+    }
+
+    int maxSum = sum;
+
+    // slide window
+    for (int i = k; i < arr.size(); i++) {
+        sum += arr[i];
+        sum -= arr[i - k];
+        maxSum = max(maxSum, sum);
+    }
+
+    return maxSum;
+}
+
+Type 2: VARIABLE SIZE Sliding Window (Most Doubts 🔥)
+❓ When to use?
+
+When question says:
+
+“largest / smallest subarray with condition”
+
+“at most k”
+
+“longest substring”
+
+“sum ≥ k”
+Idea
+
+Expand window using right
+
+When condition satisfied → try to shrink from left
+
+ONE GOLDEN RULE (Remember this)
+
+Fixed window → one loop
+Variable window → one loop + while loop
+
+int minSubArrayLen(int k, vector<int>& arr) {
+    int l = 0, sum = 0;
+    int ans = INT_MAX;
+
+    for (int r = 0; r < arr.size(); r++) {
+        sum += arr[r];
+
+        while (sum >= k) {
+            ans = min(ans, r - l + 1);
+            sum -= arr[l];
+            l++;
+        }
+    }
+
+    return ans == INT_MAX ? 0 : ans;
+}
